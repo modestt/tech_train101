@@ -1,0 +1,30 @@
+#include <msp430.h>
+unsigned char sw_IN = 0;          //Port1  Input Variable
+unsigned int i;
+void main(void)
+{
+    WDTCTL = WDTPW + WDTHOLD;     // Stop watchdog timer
+    //IO Masking
+    P1DIR |= 0x01;                // Set P1.0 as output (Relay control)
+   //Required P1DIR Mask =  0 0 0 0 0 0 0 1   // Set P1.0 as output (Relay control)
+    P1DIR &= ~0x08;               // Ensure P1.3 is input (Push button)
+    //Required P1DIR MAsk = 1 1 1 1 0 1 1 1  // Ensure P1.3 is input (Push button)
+    //current logic is
+    //P1.3 Active LOW Input as P1.3 is tied to 3.3V
+              // 0 => ON or  Pressed  => Lamp ON
+              // 1 => OFF or Not Pressed or Normal   => Lamp OFF
+    for (;;) {
+        sw_IN = P1IN & 0x08;      // Read P1.3
+       // Required P1IN Mask = 1 1 1 1 0 1 1 1
+        if (sw_IN == 0x08) {
+            P1OUT &= ~0x01;       // Button not pressed → P1.0 LOW → Lamp Normally OFF
+         //   Required P1OUT Mask =  1 1 1 1 1 1 1 0
+        } else {
+            P1OUT |= 0x01;        // Button pressed → P1.0 HIGH → Lamp NOW  ON
+         //   Required P1OUT Mask =  0 0 0 0 0 0 0 1
+        }
+        // Simple debounce delay
+        // Its important to have that to prevent Mechanical Debouncing
+        for (i = 500; i > 0; i--);
+    }
+}
