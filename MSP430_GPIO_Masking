@@ -2,7 +2,7 @@
 // I have covered relay control, push button input, and coding examples to help you get started with real-world applications. 
 //Learn how to control higher Power devices by MSP430 series microcontroller. 
 //This specific microcontroller project demonstrates how to control a 20W LED floodlight by MSP430G2231, using Relay and push button Switch.
-
+// https://youtu.be/4-AmUOfuK1Y
 
 nclude <msp430.h>
 unsigned char sw_IN = 0;          //Port1  Input Variable
