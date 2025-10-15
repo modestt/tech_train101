@@ -1,0 +1,43 @@
+  
+//Learn how to control LED Brightness using Pulse Width Modulation (PWM), with an Easy Arduino Uno project in no time, and a PWM Arduino Library, which uses Timers.  
+//Learn how Pulse Width Modulation (PWM) really works and how to control LED brightness with the Arduino Uno Project, using pin 9 and Timer1, using Arduino Uno,  PWM Library, 
+//step-by-step C code, in this easy, step-by-step Arduino Uno PWM guide. In this Arduino Uno project, you’ll understand the basics of Pulse Width Modulation by examples, how PWM signals control LED brightness by varying the duty cycle, and how to write the PWM C code using the PWM library. Perfect for beginners and those seeking new Arduino Uno project ideas!
+// https://youtu.be/hKtyzMdV6zY
+
+#define pinToUse      9
+
+#include "AVR_PWM.h"
+//creates pwm instance
+AVR_PWM* PWM_Instance;
+
+float frequency;
+float dutyCycle;
+
+void setup()
+{
+  Serial.print(F("\nStarting PWM_Basic on "));
+  Serial.println(BOARD_NAME);
+  Serial.println(AVR_PWM_VERSION);
+//assigns PWM frequency of 20 KHz and a duty cycle of 0%
+  PWM_Instance = new AVR_PWM(pinToUse, 20000, 0);
+}
+
+void loop()
+{
+  //delay(10000);
+  frequency = 100;    //
+  dutyCycle = 0 ; 
+
+ while(1)
+ {
+  for ( dutyCycle = 0 ; dutyCycle <= 100 ; dutyCycle=dutyCycle+10 )
+  {
+  PWM_Instance->setPWM(pinToUse, frequency, dutyCycle);
+  delay(1000);
+  }
+  
+ }
+
+  while(1) ;
+  delay(10000);
+}
