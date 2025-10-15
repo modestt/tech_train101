@@ -1,0 +1,113 @@
+//In this Sep by Step MSP430 Tutorial, Learn to program and control MSP430 series Microcontroller Timer A modes and control, and program for Pulse Width Modulation, also known as PWM , in no time. Learn basics, duty cycle calculations, Timer A control and counter registers.
+
+// I have written, programmed and tested several Timer A parametric combinations code snippets and captured the resulting Pulse Width Modulation waveforms on oscilloscopes. 
+
+//I have addressed all the key MSP430G2231 microcontroller Timer A registers, which are used for Pulse Width Modulation generation. 
+
+//I also have prepared a TIMER A parametric table for anyone who is looking for easy and accurate duty cycle calculations and quick  generation. 
+
+// https://youtu.be/hVxL2dwyhwI
+
+#include <msp430.h>
+
+int main(void) {
+
+    #define PWM_DELAY  10000
+
+	int i=0, y = 0 , var = 0 ;
+    WDTCTL = WDTPW | WDTHOLD; // Stop watchdog timer
+
+    BCSCTL1 = CALBC1_1MHZ;  // Load 1 MHz calibration constant
+    DCOCTL  = CALDCO_1MHZ;
+
+    // Configure P1.2 as timer output (TA0.1)
+    P1SEL |= BIT2;  // Select timer function
+    P1DIR |= BIT2;  // Set as output
+
+    // Configure Timer_A
+
+		TA0CCR0 = 1000;  // PWM Period (e.g., 1000 cycles)
+		TA0CCR1 =  50 ;   // PWM Duty Cycle (e.g., 500 cycles -> 50% duty cycle)
+
+    // Set Timer_A in up mode with ACLK and clear timer
+    TA0CTL = TASSEL_2 | MC_1 | TACLR; // ACLK, Up mode, Clear timer
+
+    // Configure TA0CCTL1 for reset/set mode to generate PWM
+    TA0CCTL1 = OUTMOD_7; // Reset/Set mode
+
+
+    var = 0 ;
+    y= 100 ;
+    i = PWM_DELAY ;
+
+    while(1)
+     {
+
+     switch (var)
+     {
+
+     case 0:
+    	 TA0CCR1 =  y ;   // PWM Duty Cycle (e.g., 500 cycles -> 50% duty cycle)
+    	 TA0CTL = TASSEL_2 | MC_1 | TACLR; // ACLK, Up mode, Clear timer
+    	 i = PWM_DELAY ;
+      	 var = 1 ;
+    	 break ;
+
+
+     case 1:
+			 i -- ;
+			 if ( i == 0 )
+			 {
+					 y = y + 50 ;
+					 var = 0 ;
+
+				// if (y == 1000 ) y = 100 ;
+				 if (y == 1000 ) var = 22 ;
+
+			 }
+			 break ;
+
+     case 22:
+        	 TA0CCR1 =  y ;   // PWM Duty Cycle (e.g., 500 cycles -> 50% duty cycle)
+        	 TA0CTL = TASSEL_2 | MC_1 | TACLR; // ACLK, Up mode, Clear timer
+        	 i = PWM_DELAY ;
+        	 var = 23 ;
+        	 break ;
+
+     case 23:
+			 i -- ;
+			 if ( i == 0 )
+			 {
+				 y = y - 50 ;
+				 var = 22 ;
+				  if (y == 100 ) var = 0 ;
+			 }
+
+
+      	 break ;
+
+
+
+
+
+     case 2:
+      	 TA0CCR1 =  500 ;   // PWM Duty Cycle (e.g., 500 cycles -> 50% duty cycle)
+      	 TA0CTL = TASSEL_2 | MC_1 | TACLR; // ACLK, Up mode, Clear timer
+      	 i = 100000 ;
+      	 var = 3 ;
+      	 break ;
+
+     case 3:
+        	 i -- ;
+        	 if ( i == 0 )
+        		 var = 0 ;
+
+        	 break ;
+
+     }
+
+
+		}
+
+    return 0;
+}
