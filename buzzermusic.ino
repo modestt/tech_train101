@@ -1,9 +1,6 @@
 /* 
-  Game of Thrones
-  Connect a piezo buzzer or speaker to pin 11 or select a new pin.
-  More songs available at https://github.com/robsoncouto/arduino-songs                                            
-                                              
-                                              Robson Couto, 2019
+  Game of Thrones Melody
+  Connect a piezo buzzer or speaker to pin 8.
 */
 #define NOTE_B0  31
 #define NOTE_C1  33
